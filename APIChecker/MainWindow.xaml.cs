@@ -30,41 +30,6 @@ namespace APIChecker
             }
         }
 
-        private void CreateRequest()
-        {
-            ResultBox.Text = "";
-            StatusBox.Text = "";
-
-            WebRequest myWebRequest = WebRequest.Create(PathBox.Text.ToString());
-            myWebRequest.Method = MethodType.Text.ToString();
-
-
-            switch (myWebRequest.Method)
-            {
-                case "GET":
-                    MakeRequestHeader(myWebRequest);
-                    break;
-
-                case "POST":
-                    MakeRequestHeader(myWebRequest);
-
-                    foreach (var currentUserInput in ParametersPanel.Children)
-                    {
-                        if (!(currentUserInput is UserInputBox)) continue;
-                        client.UploadString((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
-                    }
-                    break;
-            }
-
-            using (WebResponse webResponse = myWebRequest.GetResponse())
-            {
-                using (StreamReader reader = new StreamReader(webResponse.GetResponseStream()))
-                {
-                    ResultBox.Text = reader.ReadToEnd();
-                }
-            }
-        }
-
         private void CreateRequestHTTP()
         {
             ResultBox.Text = "";
@@ -76,15 +41,26 @@ namespace APIChecker
             switch (myWebRequest.Method)
             {
                 case "GET":
-                    MakeRequestHeader(myWebRequest);
+                    foreach (var currentUserInput in HeadersPanel.Children)
+                    {
+                        if (!(currentUserInput is UserInputBox)) continue;
+                        if ((currentUserInput as UserInputBox).NameBox.Text.ToString() == "") continue;
+                        myWebRequest.Headers.Add((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
+                    }
                     break;
 
                 case "POST":
-                    MakeRequestHeader(myWebRequest);
+                    foreach (var currentUserInput in HeadersPanel.Children)
+                    {
+                        if (!(currentUserInput is UserInputBox)) continue;
+                        if ((currentUserInput as UserInputBox).NameBox.Text.ToString() == "") continue;
+                        myWebRequest.Headers.Add((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
+                    }
 
                     foreach (var currentUserInput in ParametersPanel.Children)
                     {
                         if (!(currentUserInput is UserInputBox)) continue;
+                        myWebRequest.Headers.Add((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
                     }
                     break;
             }
@@ -97,16 +73,6 @@ namespace APIChecker
                 {
                     ResultBox.Text = reader.ReadToEnd();
                 }
-            }
-        }
-
-        private void MakeRequestHeader(WebRequest myWebRequest)
-        {
-            foreach (var currentUserInput in HeadersPanel.Children)
-            {
-                if (!(currentUserInput is UserInputBox)) continue;
-                if ((currentUserInput as UserInputBox).NameBox.Text.ToString() == "") continue;
-                myWebRequest.Headers.Add((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
             }
         }
 
