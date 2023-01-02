@@ -1,0 +1,73 @@
+﻿<Window x:Class="APIChecker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:APIChecker"
+        mc:Ignorable="d"
+        Title="APIChecker" Height="600" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="MainGrid" Grid.Column="0" Margin="10" Background="GhostWhite">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+
+            <!--Method&EndPoint-->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="30"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Method" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,0"/>
+                <TextBlock Grid.Row="0" Grid.Column="1" Text="EndPoint" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="5,0,0,0"/>
+                <ComboBox Text="GET" x:Name="MethodType" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="3" Grid.Row="1">
+                    <ComboBoxItem Content="GET"/>
+                    <ComboBoxItem Content="POST"/>
+                </ComboBox>
+                <TextBox x:Name="PathBox" Text="https://httpbin.org/get" Grid.Column="1" Margin="5" VerticalContentAlignment="Center" Height="20" Grid.Row="1"/>
+            </Grid>
+            <!--Header-->
+            <StackPanel x:Name="HeaderWrappingGrid" Grid.Row="1">
+                <StackPanel x:Name="HeadersPanel">
+                    <local:UserInputBox/>
+                </StackPanel>
+                <Button x:Name="AddHeaderButton" Content="Add Header" Width="100" Height="25" HorizontalAlignment="Left" Margin="10" Click="AddHeaderButton_Click"/>
+            </StackPanel>
+            <!--Parameter-->
+            <StackPanel x:Name="ParameterWrappingGrid" Grid.Row="2">
+                <StackPanel x:Name="ParametersPanel">
+                    <local:UserInputBox/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Button x:Name="AddParameterButton" Content="Add Parameter" Width="100" Height="25" HorizontalAlignment="Left" Margin="10" Click="AddParameterButton_Click"/>
+                </StackPanel>
+            </StackPanel>
+            <!--SendButton-->
+            <Button x:Name="RequestSendButton" Grid.Row="3" Width="80" Content="Request" HorizontalAlignment="Right" Margin="15" BorderThickness="0" Background="Cyan"/>
+        </Grid>
+
+        <Grid x:Name="BodyGrid" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="10*"/>
+            </Grid.RowDefinitions>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Row="0">
+                <TextBox x:Name="StatusBox" IsReadOnly="True" Margin="0 10 10 5" TextWrapping="Wrap"/>
+            </ScrollViewer>
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" Grid.Row="1">
+                <TextBox x:Name="ResultBox" IsReadOnly="True" Margin="0 5 10 10" TextWrapping="Wrap"/>
+            </ScrollViewer>
+        </Grid>
+    </Grid>
+</Window>

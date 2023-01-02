@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32802.440
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LadderGame", "LadderGame\LadderGame.csproj", "{FDD11A44-58FF-4C6C-9D1D-10792FDD3985}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{821B962E-E7C7-42C1-BB4B-CE35C04A7D7D}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test", "test\test.csproj", "{53700DBA-24D3-44E7-83D0-7A104A2A8199}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIChecker", "APIChecker\APIChecker.csproj", "{FB8FF9D7-4897-4B76-B451-E7113961A4D1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FDD11A44-58FF-4C6C-9D1D-10792FDD3985}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDD11A44-58FF-4C6C-9D1D-10792FDD3985}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDD11A44-58FF-4C6C-9D1D-10792FDD3985}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDD11A44-58FF-4C6C-9D1D-10792FDD3985}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53700DBA-24D3-44E7-83D0-7A104A2A8199}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53700DBA-24D3-44E7-83D0-7A104A2A8199}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53700DBA-24D3-44E7-83D0-7A104A2A8199}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53700DBA-24D3-44E7-83D0-7A104A2A8199}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB8FF9D7-4897-4B76-B451-E7113961A4D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB8FF9D7-4897-4B76-B451-E7113961A4D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB8FF9D7-4897-4B76-B451-E7113961A4D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB8FF9D7-4897-4B76-B451-E7113961A4D1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ACDC1BD6-0F7D-478E-859A-AE22DF3A50BB}
+	EndGlobalSection
+EndGlobal

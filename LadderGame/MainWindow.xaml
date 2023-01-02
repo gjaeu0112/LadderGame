@@ -1,0 +1,48 @@
+﻿<Window x:Class="LadderGame.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="LadderGame" Width="800">
+    <Grid x:Name="RootGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="0" VerticalAlignment="Bottom">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="사다리타기" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center">
+                <TextBlock Text="인원수 :" Margin="0 10"/>
+                <TextBox x:Name="PeopleNumberBox" Margin="10 10" MinWidth="40" HorizontalAlignment="Left" Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+                <Button x:Name="Run" Content="Run" Margin="10 0" Click="Run_Click"/>
+                <Button x:Name="ClearTrace" Margin="10 0" Content="경로표시&#xA;지우기" VerticalAlignment="Top" TextBlock.TextAlignment="Center" Click="ClearTrace_Click"/>
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <UniformGrid x:Name="StartPoint" Rows="1" Grid.Row="0"/>
+            <Grid Grid.Row="1">
+                <Canvas x:Name="LadderDrawingPaper"/>
+                <Canvas x:Name="LadderTracingPaper">
+                    <Path x:Name="TracingPath">
+                        <Path.Data>
+                            <PathGeometry>
+                                <PathFigure x:Name="TracingPathStart" IsClosed="False"/>
+                            </PathGeometry>
+                        </Path.Data>
+                    </Path>
+                </Canvas>
+            </Grid>
+            <UniformGrid x:Name="EndPoint" Rows="1" Grid.Row="2"/>
+        </Grid>
+    </Grid>
+</Window>
