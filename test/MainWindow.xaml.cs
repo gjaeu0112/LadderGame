@@ -30,7 +30,7 @@ namespace test
             request.Headers.Add("X-Naver-Client-Secret", "2SIClCjQ8J");
             request.Method = "POST";
             string query = "오늘 날씨는 어떻습니까?";
-            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=ko&target=en&text=" + query);
+            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=ko&target=ko&text=" + query);
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = byteDataParams.Length;
             Stream st = request.GetRequestStream();

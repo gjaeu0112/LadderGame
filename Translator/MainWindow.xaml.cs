@@ -29,6 +29,10 @@ namespace Translator
 
             string sourceLanugageData = GetLanguageData(TranslateFromSelectBox.Text.ToString(), LanguageBoxType.source);
             string targetLanguageData = GetLanguageData(TranslateToSelectBox.Text.ToString(), LanguageBoxType.target);
+            if (sourceLanugageData == targetLanguageData)
+            {
+                targetLanguageData = GetLanguageData("", LanguageBoxType.target);
+            }
 
             byte[] byteDataParams = Encoding.UTF8.GetBytes("source=" + sourceLanugageData + "&target=" + targetLanguageData + "&text=" + SourceTextBox.Text.ToString());
             request.ContentType = "application/x-www-form-urlencoded";
@@ -86,7 +90,7 @@ namespace Translator
         }
         private string GetLanguageData(string SelectedLanguage, LanguageBoxType languageBoxType)
         {
-            if (SelectedLanguage != "") { return SelectedLanguage; }    //콤보 박스를 선택하지 않았을 때
+            if (SelectedLanguage != "" && SelectedLanguage != "Detect Language") { return SelectedLanguage; }    //콤보 박스를 선택하지 않았을 때
             string LanguageData;
             if (languageBoxType == LanguageBoxType.source)              //번역할 언어를 선택하지 않았을 때
             {
@@ -121,9 +125,14 @@ namespace Translator
 
             return jObject["langCode"].ToString();
         }
-        private void MinimizeModeButton(object sender, RoutedEventArgs e)
+        private void MinimizeModeButtonClick(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void PasteButtonClick(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(TargetTextBox.Text.ToString());
         }
     }
 }

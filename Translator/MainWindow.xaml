@@ -21,19 +21,23 @@
                 <ComboBoxItem Content="Detect Language"/>
                 <ComboBoxItem Content="en"/>
                 <ComboBoxItem Content="ko"/>
-                <ComboBoxItem Content="ch"/>
+                <ComboBoxItem Content="zh-CN"/>
                 <ComboBoxItem Content="ja"/>
             </ComboBox>
             <ComboBox Grid.Column="1" x:Name="TranslateToSelectBox" Text="{Binding Text, UpdateSourceTrigger=PropertyChanged}" VerticalContentAlignment="Center">
                 <ComboBoxItem Content="en"/>
                 <ComboBoxItem Content="ko"/>
-                <ComboBoxItem Content="ch"/>
+                <ComboBoxItem Content="zh-CN"/>
                 <ComboBoxItem Content="ja"/>
             </ComboBox>
             <TextBox x:Name="SourceTextBox" Grid.Row="1" Grid.Column="0" Text="번역할 내용을 입력하세요." TextWrapping="Wrap"/>
             <TextBox x:Name="TargetTextBox" Grid.Row="1" Grid.Column="1" Text="번역된 내용은 여기에 표시됩니다." IsReadOnly="True" TextWrapping="Wrap"/>
-            <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5" BorderThickness="0" Background="Transparent" Click="MinimizeModeButton">
+            <Button Grid.Row="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5" BorderThickness="0" Background="Transparent" Click="MinimizeModeButtonClick">
                 <Path Data="M0,16 L16,16 L16,14 L16,8 L14,6 L14,14 L8,14 L3.5,14 L14,3.5 L16,6 L16,0 L10,0 L12.5,2 L2,12.5 L2,2 L10,2 L8,0 L2,0 L0,0 Z" Fill="Black"/>
+            </Button>
+
+            <Button Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5" BorderThickness="0" Background="Transparent" Click="PasteButtonClick">
+                <Image Source="Images/paste.png"/>
             </Button>
             <Button Grid.Row="2" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="70" Height="30" Content="번역하기" Click="TranslateTriggerButtonClick"/>
         </Grid>
