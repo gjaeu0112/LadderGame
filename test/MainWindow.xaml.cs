@@ -24,101 +24,47 @@ namespace test
         }
         private void GridButton_Click(object sender, RoutedEventArgs e)
         {
-            // JSON Data
-            string json = "" +
-                "{ " +
-                "  'squadName': 'Super hero squad', " +
-                "  'homeTown': 'Metro City', " +
-                "  'active': true, " +
-                "  'members': [ " +
-                "               { 'name': 'Molecule Man', " +
-                "                 'age': 29, " +
-                "                 'powers': [ " +
-                "                             'Radiation resistance', " +
-                "                             'Turning tiny', " +
-                "                           ] " +
-                "               }, " +
-                "               { " +
-                "                 'name': 'Madame Uppercut', " +
-                "                 'age': 39, " +
-                "                 'powers': [ " +
-                "                             'Million tonne punch', " +
-                "                           ] " +
-                "               }, " +
-                "               { " +
-                "                 'name': 'Eternal Flame', " +
-                "                 'age': 1000000, " +
-                "                 'powers': [ " +
-                "                             'Immortality', " +
-                "                             'Heat Immunity', " +
-                "                           ] " +
-                "               } " +
-                "             ] " +
-                "}";
+            string url = "https://openapi.naver.com/v1/papago/n2mt";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers.Add("X-Naver-Client-Id", "I8eNcaC4YF3PueAm0n7u");
+            request.Headers.Add("X-Naver-Client-Secret", "2SIClCjQ8J");
+            request.Method = "POST";
+            string query = "오늘 날씨는 어떻습니까?";
+            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=ko&target=en&text=" + query);
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = byteDataParams.Length;
+            Stream st = request.GetRequestStream();
+            st.Write(byteDataParams, 0, byteDataParams.Length);
+            st.Close();
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream stream = response.GetResponseStream();
+            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
+            string text = reader.ReadToEnd();
+            stream.Close();
+            response.Close();
+            reader.Close();
+            Console.WriteLine(text);
 
-
-            /////////////////////////////////////////////////
-            // Native Object 사용 방법
-            /////////////////////////////////////////////////
-
-            // Native Object 생성
-            JObject jObject = JObject.Parse(json);
-
-            // Json Data 전체 출력
-            Console.WriteLine(jObject.ToString());
-
-            // JSON 데이터 중 'Radiation resistance' 데이터까지 접근하는 방법
-            Console.WriteLine(jObject["members"][0]["powers"][0]);
-
-            // JSON 데이터 하위 객체인 members 객체의 name 값을 반복적으로 접근하는 방법
-            JToken jToken = jObject["members"];
-            foreach (JToken members in jToken)
-            {
-                Console.WriteLine(members["name"]);
-            }
-
-
-            /////////////////////////////////////////////////
-            // 역직렬화(Deserialize) 방법
-            /////////////////////////////////////////////////
-
-            // 역직렬화 수행 후 미리 선언한 클래스에 저장
-            Root rootObject = JsonConvert.DeserializeObject<Root>(json);
-
-            // JSON 데이터 중 'Radiation resistance' 데이터까지 접근하는 방법
-            Console.WriteLine(rootObject.members[0].powers[0]);
-
-            // JSON 데이터 하위 객체인 members 객체의 name 값을 반복적으로 접근하는 방법
-            foreach (Members members in rootObject.members)
-            {
-                Console.WriteLine(members.name);
-            }
-
-
-            /////////////////////////////////////////////////
-            // 직렬화(Serialize) 방법
-            /////////////////////////////////////////////////
-
-            // 직렬화 수행 후 string 변수에 저장
-            string serializeResult = JsonConvert.SerializeObject(rootObject);
-
-            // Json Data 전체 출력
-            Console.WriteLine(serializeResult);
-        }
-
-        // 역직렬화를 위한 클래스 선언
-        public class Root
-        {
-            public string squadName;
-            public string homeTown;
-            public string active;
-            public List<Members> members;
-        }
-        public class Members
-        {
-            public string name;
-            public string age;
-            public List<string> powers;
+            url = "https://openapi.naver.com/v1/papago/detectLangs";
+            request = (HttpWebRequest)WebRequest.Create(url);
+            request.Headers.Add("X-Naver-Client-Id", "ar5rHu2ow2bT2jHC086v");
+            request.Headers.Add("X-Naver-Client-Secret", "qIbmM7KVJu");
+            request.Method = "POST";
+            query = "오늘 날씨는 어떻습니까?";
+            byteDataParams = Encoding.UTF8.GetBytes("query=" + query);
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.ContentLength = byteDataParams.Length;
+            st = request.GetRequestStream();
+            st.Write(byteDataParams, 0, byteDataParams.Length);
+            st.Close();
+            response = (HttpWebResponse)request.GetResponse();
+            stream = response.GetResponseStream();
+            reader = new StreamReader(stream, Encoding.UTF8);
+            text = reader.ReadToEnd();
+            stream.Close();
+            response.Close();
+            reader.Close();
+            Console.WriteLine(text);
         }
     }
 

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Net;
 using System.IO;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace Translator
 {
@@ -18,36 +20,29 @@ namespace Translator
         {
             InitializeComponent();
         }
+        enum APIMode { Translator, LangDetect }
+        enum LanguageBoxType { source, target}
 
         private void TranslateTriggerButtonClick(object sender, RoutedEventArgs e)
         {
-            string PapagoUrl = "https://openapi.naver.com/v1/papago/n2mt";
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(PapagoUrl);
-            request.Headers.Add("X-Naver-Client-Id", "I8eNcaC4YF3PueAm0n7u");
-            request.Headers.Add("X-Naver-Client-Secret", "2SIClCjQ8J");
-            request.Method = "POST";
+            HttpWebRequest request = GetHttpWebRequest(APIMode.Translator);
 
-            string query = TranslateFromSelectBox.Text.ToString();
+            string sourceLanugageData = GetLanguageData(TranslateFromSelectBox.Text.ToString(), LanguageBoxType.source);
+            string targetLanguageData = GetLanguageData(TranslateToSelectBox.Text.ToString(), LanguageBoxType.target);
 
-            string translateTo = "ko";
-            if (TranslateToSelectBox.Text.ToString() == "")
-            {
-                string defaultLanguage = DetectLanguage(TranslateFromSelectBox.Text.ToString());
-
-            }
-            else
-            {
-                translateTo = GetTranslateTo(translateTo);
-            }
-
-            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=" + translateTo + "&target=en&text=" + query);
+            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=" + sourceLanugageData + "&target="+ targetLanguageData + "&text=" + SourceTextBox.Text.ToString());
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = byteDataParams.Length;
 
-            Stream st = request.GetRequestStream();
-            st.Write(byteDataParams, 0, byteDataParams.Length);
-            st.Close();
-
+            using (Stream st = request.GetRequestStream())
+            {
+                st.Write(byteDataParams, 0, byteDataParams.Length);
+            }
+            JObject jObject = JObject.Parse(GetWebResponse(request));
+            TargetTextBox.Text = jObject["message"]["result"]["translatedText"].ToString();
+        }
+        private static string GetWebResponse(HttpWebRequest request)
+        {
             HttpWebResponse response = (HttpWebResponse)request.GetResponse();
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream, Encoding.UTF8);
@@ -55,59 +50,69 @@ namespace Translator
             stream.Close();
             response.Close();
             reader.Close();
-
-            Console.WriteLine(text);
+            return text;
         }
-
-        private string GetTranslateTo(string translateTo)
+        private HttpWebRequest GetHttpWebRequest(APIMode Api)
         {
-            switch (TranslateToSelectBox.Text.ToString())
+            HttpWebRequest request = null;
+            switch (Api)
             {
-                case "Korean":
-                    translateTo = "ko";
+                case APIMode.Translator:
+                    string PapagoUrl = "https://openapi.naver.com/v1/papago/n2mt";
+                    request = (HttpWebRequest)WebRequest.Create(PapagoUrl);
+                    request.Headers.Add("X-Naver-Client-Id", "I8eNcaC4YF3PueAm0n7u");
+                    request.Headers.Add("X-Naver-Client-Secret", "2SIClCjQ8J");
+                    request.Method = "POST";
                     break;
-                case "English":
-                    translateTo = "en";
+                case APIMode.LangDetect:
+                    string PapagoLanguageDetectUrl = "https://openapi.naver.com/v1/papago/detectLangs";
+                    request = (HttpWebRequest)WebRequest.Create(PapagoLanguageDetectUrl);
+                    request.Headers.Add("X-Naver-Client-Id", "ar5rHu2ow2bT2jHC086v");
+                    request.Headers.Add("X-Naver-Client-Secret", "qIbmM7KVJu");
+                    request.Method = "POST";
                     break;
-                case "Japanese":
-                    translateTo = "ja";
-                    break;
-                case "Chinese":
-                    translateTo = "ch";
+                default:
                     break;
             }
-
-            return translateTo;
+            return request;
         }
-
+        private string GetLanguageData(string SelectedLanguage, LanguageBoxType languageBoxType)
+        {
+            if (SelectedLanguage != "") { return SelectedLanguage; }    //콤보 박스를 선택하지 않았을 때
+            string LanguageData;
+            if (languageBoxType == LanguageBoxType.source)              //번역할 언어를 선택하지 않았을 때
+            {
+                LanguageData = DetectLanguage(SourceTextBox.Text.ToString());
+                TranslateFromSelectBox.Text = LanguageData;
+                return LanguageData;
+            }
+            else //(languageBoxType == LanguageBoxType.target)          //번역될 언어를 선택하지 않았을 때
+            {
+                LanguageData = TranslateFromSelectBox.Text.ToString() != "ko" ? "ko" : "en";
+                TranslateToSelectBox.Text = LanguageData;
+                return LanguageData;
+            }
+        }
         private string DetectLanguage(string userInputString)
         {
-            string PapagoLanguageDetectUrl = "https://openapi.naver.com/v1/papago/detectLangs";
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(PapagoLanguageDetectUrl);
-            request.Headers.Add("X-Naver-Client-Id", "ar5rHu2ow2bT2jHC086v");
-            request.Headers.Add("X-Naver-Client-Secret", "qIbmM7KVJu");
-            request.Method = "POST";
+            HttpWebRequest request = GetHttpWebRequest(APIMode.LangDetect);
 
             string query = userInputString;
             byte[] byteDataParams = Encoding.UTF8.GetBytes("query=" + query);
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = byteDataParams.Length;
 
-            Stream st = request.GetRequestStream();
-            st.Write(byteDataParams, 0, byteDataParams.Length);
-            st.Close();
+            using (Stream st = request.GetRequestStream())
+            {
+                st.Write(byteDataParams, 0, byteDataParams.Length);
+            }
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            Stream stream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-            string text = reader.ReadToEnd();
-            stream.Close();
-            response.Close();
-            reader.Close();
+            string text = GetWebResponse(request);
 
-            return text;
+            JObject jObject = JObject.Parse(text);
+
+            return jObject["langCode"].ToString();
         }
-
         private void MinimizeModeButton(object sender, RoutedEventArgs e)
         {
 
