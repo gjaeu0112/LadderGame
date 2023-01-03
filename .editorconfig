@@ -2,3 +2,6 @@
 
 # IDE0058: 식 값은 절대 사용되지 않습니다.
 dotnet_diagnostic.IDE0058.severity = none
+
+# IDE0011: 중괄호 추가
+dotnet_diagnostic.IDE0011.severity = none

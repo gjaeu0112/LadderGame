@@ -14,9 +14,7 @@ namespace APIChecker
         {
             InitializeComponent();
             RequestSendButton.Click += RequestSendButton_Click;
-
         }
-        public WebClient client = new WebClient();
         private void RequestSendButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -41,30 +39,26 @@ namespace APIChecker
             switch (myWebRequest.Method)
             {
                 case "GET":
-                    foreach (var currentUserInput in HeadersPanel.Children)
-                    {
-                        if (!(currentUserInput is UserInputBox)) continue;
-                        if ((currentUserInput as UserInputBox).NameBox.Text.ToString() == "") continue;
-                        myWebRequest.Headers.Add((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
-                    }
+                    RequestHeaderAdd(myWebRequest);
                     break;
 
                 case "POST":
-                    foreach (var currentUserInput in HeadersPanel.Children)
-                    {
-                        if (!(currentUserInput is UserInputBox)) continue;
-                        if ((currentUserInput as UserInputBox).NameBox.Text.ToString() == "") continue;
-                        myWebRequest.Headers.Add((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
-                    }
+                    RequestHeaderAdd(myWebRequest);
 
                     foreach (var currentUserInput in ParametersPanel.Children)
                     {
                         if (!(currentUserInput is UserInputBox)) continue;
+                        if ((currentUserInput as UserInputBox).NameBox.Text.ToString() == "") continue;
                         myWebRequest.Headers.Add((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
                     }
                     break;
             }
 
+            GetResponse(myWebRequest);
+        }
+
+        private void GetResponse(HttpWebRequest myWebRequest)
+        {
             using (HttpWebResponse resp = (HttpWebResponse)myWebRequest.GetResponse())
             {
                 HttpStatusCode respStatus = resp.StatusCode;
@@ -73,6 +67,16 @@ namespace APIChecker
                 {
                     ResultBox.Text = reader.ReadToEnd();
                 }
+            }
+        }
+
+        private void RequestHeaderAdd(HttpWebRequest myWebRequest)
+        {
+            foreach (var currentUserInput in HeadersPanel.Children)
+            {
+                if (!(currentUserInput is UserInputBox)) continue;
+                if ((currentUserInput as UserInputBox).NameBox.Text.ToString() == "") continue;
+                myWebRequest.Headers.Add((currentUserInput as UserInputBox).NameBox.Text.ToString(), (currentUserInput as UserInputBox).ValueBox.Text.ToString());
             }
         }
 
