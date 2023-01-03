@@ -30,7 +30,7 @@ namespace Translator
             string sourceLanugageData = GetLanguageData(TranslateFromSelectBox.Text.ToString(), LanguageBoxType.source);
             string targetLanguageData = GetLanguageData(TranslateToSelectBox.Text.ToString(), LanguageBoxType.target);
 
-            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=" + sourceLanugageData + "&target="+ targetLanguageData + "&text=" + SourceTextBox.Text.ToString());
+            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=" + sourceLanugageData + "&target=" + targetLanguageData + "&text=" + SourceTextBox.Text.ToString());
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = byteDataParams.Length;
 
@@ -43,7 +43,15 @@ namespace Translator
         }
         private static string GetWebResponse(HttpWebRequest request)
         {
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            HttpWebResponse response = null;
+            try
+            {
+                response = (HttpWebResponse)request.GetResponse();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
             Stream stream = response.GetResponseStream();
             StreamReader reader = new StreamReader(stream, Encoding.UTF8);
             string text = reader.ReadToEnd();
