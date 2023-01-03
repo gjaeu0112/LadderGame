@@ -1,8 +1,13 @@
-﻿using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Net;
+using System.IO;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace test
 {
@@ -17,64 +22,103 @@ namespace test
 
             GridButton.Click += GridButton_Click;
         }
-        class Item
-        {
-            public int id;
-            public string name;
-            public int damage;
-
-            public Item(int id, string name, int damage)
-            {
-                this.id = id;
-                this.name = name;
-                this.damage = damage;
-            }
-        }
         private void GridButton_Click(object sender, RoutedEventArgs e)
         {
-            //테스트를 위한 데이터 생성.
-            Item[] itemArr = {
-                new Item(0, "장검", 10),
-                new Item(1, "단검", 8),
-                new Item(2, "활", 12),
-                new Item(3, "총", 15),
-                new Item(4, "도끼", 20)
-            };
+            // JSON Data
+            string json = "" +
+                "{ " +
+                "  'squadName': 'Super hero squad', " +
+                "  'homeTown': 'Metro City', " +
+                "  'active': true, " +
+                "  'members': [ " +
+                "               { 'name': 'Molecule Man', " +
+                "                 'age': 29, " +
+                "                 'powers': [ " +
+                "                             'Radiation resistance', " +
+                "                             'Turning tiny', " +
+                "                           ] " +
+                "               }, " +
+                "               { " +
+                "                 'name': 'Madame Uppercut', " +
+                "                 'age': 39, " +
+                "                 'powers': [ " +
+                "                             'Million tonne punch', " +
+                "                           ] " +
+                "               }, " +
+                "               { " +
+                "                 'name': 'Eternal Flame', " +
+                "                 'age': 1000000, " +
+                "                 'powers': [ " +
+                "                             'Immortality', " +
+                "                             'Heat Immunity', " +
+                "                           ] " +
+                "               } " +
+                "             ] " +
+                "}";
 
-            //테스트를 위한 데이터 삽입.
-            var itemDIct = new Dictionary<int, Item>();
-            var itemList = new List<Item>();
 
-            foreach (var item in itemArr)
+            /////////////////////////////////////////////////
+            // Native Object 사용 방법
+            /////////////////////////////////////////////////
+
+            // Native Object 생성
+            JObject jObject = JObject.Parse(json);
+
+            // Json Data 전체 출력
+            Console.WriteLine(jObject.ToString());
+
+            // JSON 데이터 중 'Radiation resistance' 데이터까지 접근하는 방법
+            Console.WriteLine(jObject["members"][0]["powers"][0]);
+
+            // JSON 데이터 하위 객체인 members 객체의 name 값을 반복적으로 접근하는 방법
+            JToken jToken = jObject["members"];
+            foreach (JToken members in jToken)
             {
-                itemDIct.Add(item.id, item);
-                itemList.Add(item);
+                Console.WriteLine(members["name"]);
             }
 
-            //where 사용.
 
-            //itemDict에서 데미지가 12미만인 아이템 가져오기. 
-            IEnumerable<KeyValuePair<int, Item>> items1 = itemDIct.Where(x => x.Value.damage < 12);
-            foreach (var item in items1)
-                Console.WriteLine("key : {0}, 아이템 이름 : {1}, 데미지 : {2}",
-                    item.Key, item.Value.name, item.Value.damage);
+            /////////////////////////////////////////////////
+            // 역직렬화(Deserialize) 방법
+            /////////////////////////////////////////////////
 
-            //items1의 타입 : IEnumerable<KeyValuePair>Select
-            //실행 결과
-            //key : 0, 아이템 이름 : 장검, 데미지 : 10
-            //key : 1, 아이템 이름 : 단검, 데미지 : 8
+            // 역직렬화 수행 후 미리 선언한 클래스에 저장
+            Root rootObject = JsonConvert.DeserializeObject<Root>(json);
+
+            // JSON 데이터 중 'Radiation resistance' 데이터까지 접근하는 방법
+            Console.WriteLine(rootObject.members[0].powers[0]);
+
+            // JSON 데이터 하위 객체인 members 객체의 name 값을 반복적으로 접근하는 방법
+            foreach (Members members in rootObject.members)
+            {
+                Console.WriteLine(members.name);
+            }
 
 
-            //itemList에서 데미지가 12 미만인 아이템 가져오기.
-            IEnumerable<Item> items2 = itemList.Where(x => x.damage < 12);
-            foreach (var item in items2)
-                Console.WriteLine("id : {0}, 아이템 이름 : {1}, 데미지 : {2}",
-                    item.id, item.name, item.damage);
+            /////////////////////////////////////////////////
+            // 직렬화(Serialize) 방법
+            /////////////////////////////////////////////////
 
-            //items2의 타입 : IEnumerable<Item>
-            //실행 결과
-            //id : 0, 아이템 이름 : 장검, 데미지 : 10
-            //id : 1, 아이템 이름 : 단검, 데미지 : 8
+            // 직렬화 수행 후 string 변수에 저장
+            string serializeResult = JsonConvert.SerializeObject(rootObject);
+
+            // Json Data 전체 출력
+            Console.WriteLine(serializeResult);
+        }
+
+        // 역직렬화를 위한 클래스 선언
+        public class Root
+        {
+            public string squadName;
+            public string homeTown;
+            public string active;
+            public List<Members> members;
+        }
+        public class Members
+        {
+            public string name;
+            public string age;
+            public List<string> powers;
         }
     }
 
