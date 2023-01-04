@@ -19,11 +19,41 @@ namespace Translator
         public MainWindow()
         {
             InitializeComponent();
+            Loaded += Translator_Opening;
+            Closing += Translator_Closing;
         }
 
+        #region ProgramSetting
+        private void Translator_Opening(object sender, RoutedEventArgs e)
+        {
+            // TODO: 언어 세팅이 바뀌질 않음
+            SourceTextBox.FontSize = int.Parse(Properties.Settings.Default["LeftFontSize"].ToString());
+            TargetTextBox.FontSize = int.Parse(Properties.Settings.Default["RightFontSize"].ToString());
+            TranslateFromSelectBox.Text = Properties.Settings.Default["LeftTransLang"].ToString();
+            TranslateToSelectBox.Text = Properties.Settings.Default["RightTransLang"].ToString();
+            SourceTextBox.Text = Properties.Settings.Default["LeftTransResult"].ToString();
+            TargetTextBox.Text = Properties.Settings.Default["RightTransResult"].ToString();
+        }
+        private void Translator_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Properties.Settings.Default["LeftFontSize"] = SourceTextBox.FontSize.ToString();
+            Properties.Settings.Default["RightFontSize"] = TargetTextBox.FontSize.ToString();
+            Properties.Settings.Default["LeftTransLang"] = TranslateFromSelectBox.Text.ToString();
+            Properties.Settings.Default["RightTransLang"] = TranslateToSelectBox.Text.ToString();
+            Properties.Settings.Default["LeftTransResult"] = SourceTextBox.Text.ToString();
+            Properties.Settings.Default["RightTransResult"] = TargetTextBox.Text.ToString();
+            Properties.Settings.Default.Save();
+        }
+
+        #endregion
         private void TranslateTriggerButtonClick(object sender, RoutedEventArgs e)
         {
-            HttpWebRequest request = GetHttpWebRequest(APIMode.Translator);
+            HttpWebRequest request = GetHttpWebRequest(TranslateAPIType.Papago);
+            if (request == null)
+            {
+                MessageBox.Show("잘못된 요청입니다.");
+                return;
+            }
 
             string sourceLanugageData = GetLanguageData(TranslateFromSelectBox.Text.ToString(), LanguageBoxType.source);
             string targetLanguageData = GetLanguageData(TranslateToSelectBox.Text.ToString(), LanguageBoxType.target);
@@ -51,7 +81,7 @@ namespace Translator
             JObject jObject = JObject.Parse(GetWebResponse(request));
             TargetTextBox.Text = jObject["message"]["result"]["translatedText"].ToString();
         }
-        #region Get
+        #region Get-Methods
         private static string GetWebResponse(HttpWebRequest request)
         {
             HttpWebResponse response = null;
@@ -71,25 +101,38 @@ namespace Translator
             reader.Close();
             return text;
         }
-        private HttpWebRequest GetHttpWebRequest(APIMode Api)
+        private HttpWebRequest GetHttpWebRequest(TranslateAPIType whichAPI)
         {
             HttpWebRequest request = null;
-            switch (Api)
+            string url;
+            switch (whichAPI)
             {
-                case APIMode.Translator:
-                    string PapagoUrl = "https://openapi.naver.com/v1/papago/n2mt";
-                    request = (HttpWebRequest)WebRequest.Create(PapagoUrl);
+                //TODO: API추가하기
+                case TranslateAPIType.Papago:
+                    url = "https://openapi.naver.com/v1/papago/n2mt";
+                    request = (HttpWebRequest)WebRequest.Create(url);
                     request.Headers.Add("X-Naver-Client-Id", "I8eNcaC4YF3PueAm0n7u");
                     request.Headers.Add("X-Naver-Client-Secret", "2SIClCjQ8J");
                     request.Method = "POST";
                     break;
-                case APIMode.LangDetect:
-                    string PapagoLanguageDetectUrl = "https://openapi.naver.com/v1/papago/detectLangs";
-                    request = (HttpWebRequest)WebRequest.Create(PapagoLanguageDetectUrl);
+                case TranslateAPIType.PapagoLangDetect:
+                    url = "https://openapi.naver.com/v1/papago/detectLangs";
+                    request = (HttpWebRequest)WebRequest.Create(url);
                     request.Headers.Add("X-Naver-Client-Id", "ar5rHu2ow2bT2jHC086v");
                     request.Headers.Add("X-Naver-Client-Secret", "qIbmM7KVJu");
                     request.Method = "POST";
                     break;
+                case TranslateAPIType.Google:
+                case TranslateAPIType.Kakao:
+                case TranslateAPIType.Bing:
+                case TranslateAPIType.Watson:
+                case TranslateAPIType.Yandex:
+                case TranslateAPIType.Systran:
+                case TranslateAPIType.Baidu:
+                case TranslateAPIType.Youdao:
+                case TranslateAPIType.Sogou:
+                case TranslateAPIType.Tencent:
+                case TranslateAPIType.Alibaba:
                 default:
                     break;
             }
@@ -112,10 +155,9 @@ namespace Translator
                 return LanguageData;
             }
         } 
-        #endregion
         private string DetectLanguage(string userInputString)
         {
-            HttpWebRequest request = GetHttpWebRequest(APIMode.LangDetect);
+            HttpWebRequest request = GetHttpWebRequest(TranslateAPIType.PapagoLangDetect);
 
             string query = userInputString;
             byte[] byteDataParams = Encoding.UTF8.GetBytes("query=" + query);
@@ -133,7 +175,7 @@ namespace Translator
 
             return jObject["langCode"].ToString();
         }
-
+        #endregion
         #region ButtonClick
         private void MinimizeModeButtonClick(object sender, RoutedEventArgs e)
         {
@@ -146,11 +188,11 @@ namespace Translator
         }
         private void FontSizeDownTransFromButton(object sender, RoutedEventArgs e)
         {
-            SourceTextBox.FontSize++;
+            SourceTextBox.FontSize--;
         }
         private void FontSizeUpTransFromButton(object sender, RoutedEventArgs e)
         {
-            SourceTextBox.FontSize--;
+            SourceTextBox.FontSize++;
         }
         private void FontSizeDownTransToButton(object sender, RoutedEventArgs e)
         {

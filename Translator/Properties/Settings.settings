@@ -1,7 +1,24 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="uri:settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Translator.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="LeftFontSize" Type="System.String" Scope="User">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="RightFontSize" Type="System.String" Scope="User">
+      <Value Profile="(Default)">12</Value>
+    </Setting>
+    <Setting Name="LeftTransLang" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ko</Value>
+    </Setting>
+    <Setting Name="RightTransLang" Type="System.String" Scope="User">
+      <Value Profile="(Default)">en</Value>
+    </Setting>
+    <Setting Name="LeftTransResult" Type="System.String" Scope="User">
+      <Value Profile="(Default)">번역할 내용을 입력해주세요.</Value>
+    </Setting>
+    <Setting Name="RightTransResult" Type="System.String" Scope="User">
+      <Value Profile="(Default)">번역된 내용은 여기에 표시됩니다.</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

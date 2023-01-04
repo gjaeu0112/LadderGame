@@ -13,7 +13,12 @@
             Watson,
             Yandex,
             Systran,
-            Baidu
+            Baidu,
+            Youdao,
+            Sogou,
+            Tencent,
+            Alibaba,
+            PapagoLangDetect
         }
         enum LanguageCode
         {
