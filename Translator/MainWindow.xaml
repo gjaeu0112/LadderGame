@@ -3,11 +3,29 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Translator" xmlns:Views="clr-namespace:Translator.Views"
+        xmlns:local="clr-namespace:Translator" 
+        xmlns:Views="clr-namespace:Translator.Views" 
+        xmlns:ViewModel="clr-namespace:Translator.ViewModel"
         mc:Ignorable="d"
-        Title="Translator" Height="600" Width="600">
+        Title="Translator" Height="600" Width="800">
+    <Window.DataContext>
+        <ViewModel:MainViewModel/>
+    </Window.DataContext>
     <Grid>
-        <Views:WithLogView Margin="0 30 0 0"/>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <UniformGrid Columns="1" VerticalAlignment="Top">
+            <Button Height="50" Content="WithLogView" Command="{Binding WithLogViewCommand}"/>
+            <Button Height="50" Content="CompareView" Command="{Binding CompareViewCommand}"/>
+            <Button Height="50" Content="MinimalView" Command="{Binding MinimalViewCommand}"/>
+        </UniformGrid>
+
+        <ContentControl Margin="10" Content="{Binding CurrentView}" Grid.Column="1" Grid.RowSpan="2"/>
     </Grid>
 </Window>
