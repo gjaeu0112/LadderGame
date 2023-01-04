@@ -2,9 +2,12 @@
 {
     public partial class MainWindow
     {
-        enum APIMode { Translator, LangDetect }
-        enum LanguageBoxType { source, target }
-        enum TranslateAPIType
+        public enum LanguageBoxType
+        {
+            source,
+            target
+        }
+        public enum TranslateAPIType
         {
             Papago,
             Google,
@@ -20,7 +23,7 @@
             Alibaba,
             PapagoLangDetect
         }
-        enum LanguageCode
+        public enum LanguageCode
         {
             ko = 1,     //한국어
             ja = 2,     //일본어

@@ -24,47 +24,7 @@ namespace test
         }
         private void GridButton_Click(object sender, RoutedEventArgs e)
         {
-            string url = "https://openapi.naver.com/v1/papago/n2mt";
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Headers.Add("X-Naver-Client-Id", "I8eNcaC4YF3PueAm0n7u");
-            request.Headers.Add("X-Naver-Client-Secret", "2SIClCjQ8J");
-            request.Method = "POST";
-            string query = "오늘 날씨는 어떻습니까?";
-            byte[] byteDataParams = Encoding.UTF8.GetBytes("source=ko&target=ko&text=" + query);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteDataParams.Length;
-            Stream st = request.GetRequestStream();
-            st.Write(byteDataParams, 0, byteDataParams.Length);
-            st.Close();
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            Stream stream = response.GetResponseStream();
-            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-            string text = reader.ReadToEnd();
-            stream.Close();
-            response.Close();
-            reader.Close();
-            Console.WriteLine(text);
 
-            url = "https://openapi.naver.com/v1/papago/detectLangs";
-            request = (HttpWebRequest)WebRequest.Create(url);
-            request.Headers.Add("X-Naver-Client-Id", "ar5rHu2ow2bT2jHC086v");
-            request.Headers.Add("X-Naver-Client-Secret", "qIbmM7KVJu");
-            request.Method = "POST";
-            query = "오늘 날씨는 어떻습니까?";
-            byteDataParams = Encoding.UTF8.GetBytes("query=" + query);
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.ContentLength = byteDataParams.Length;
-            st = request.GetRequestStream();
-            st.Write(byteDataParams, 0, byteDataParams.Length);
-            st.Close();
-            response = (HttpWebResponse)request.GetResponse();
-            stream = response.GetResponseStream();
-            reader = new StreamReader(stream, Encoding.UTF8);
-            text = reader.ReadToEnd();
-            stream.Close();
-            response.Close();
-            reader.Close();
-            Console.WriteLine(text);
         }
     }
 
