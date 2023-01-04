@@ -20,8 +20,6 @@ namespace Translator
         {
             InitializeComponent();
         }
-        enum APIMode { Translator, LangDetect }
-        enum LanguageBoxType { source, target}
 
         private void TranslateTriggerButtonClick(object sender, RoutedEventArgs e)
         {
@@ -38,13 +36,22 @@ namespace Translator
             request.ContentType = "application/x-www-form-urlencoded";
             request.ContentLength = byteDataParams.Length;
 
-            using (Stream st = request.GetRequestStream())
+            try
             {
-                st.Write(byteDataParams, 0, byteDataParams.Length);
+                using (Stream st = request.GetRequestStream())
+                {
+                    st.Write(byteDataParams, 0, byteDataParams.Length);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return;
             }
             JObject jObject = JObject.Parse(GetWebResponse(request));
             TargetTextBox.Text = jObject["message"]["result"]["translatedText"].ToString();
         }
+        #region Get
         private static string GetWebResponse(HttpWebRequest request)
         {
             HttpWebResponse response = null;
@@ -52,7 +59,7 @@ namespace Translator
             {
                 response = (HttpWebResponse)request.GetResponse();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -104,7 +111,8 @@ namespace Translator
                 TranslateToSelectBox.Text = LanguageData;
                 return LanguageData;
             }
-        }
+        } 
+        #endregion
         private string DetectLanguage(string userInputString)
         {
             HttpWebRequest request = GetHttpWebRequest(APIMode.LangDetect);
@@ -125,6 +133,8 @@ namespace Translator
 
             return jObject["langCode"].ToString();
         }
+
+        #region ButtonClick
         private void MinimizeModeButtonClick(object sender, RoutedEventArgs e)
         {
 
@@ -134,5 +144,22 @@ namespace Translator
         {
             Clipboard.SetText(TargetTextBox.Text.ToString());
         }
+        private void FontSizeDownTransFromButton(object sender, RoutedEventArgs e)
+        {
+            SourceTextBox.FontSize++;
+        }
+        private void FontSizeUpTransFromButton(object sender, RoutedEventArgs e)
+        {
+            SourceTextBox.FontSize--;
+        }
+        private void FontSizeDownTransToButton(object sender, RoutedEventArgs e)
+        {
+            TargetTextBox.FontSize--;
+        }
+        private void FontSizeUpTransToButton(object sender, RoutedEventArgs e)
+        {
+            TargetTextBox.FontSize++;
+        }
+        #endregion
     }
 }
