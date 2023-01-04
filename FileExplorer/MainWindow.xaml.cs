@@ -18,7 +18,6 @@ namespace Savannah
         public MainWindow()
         {
             InitializeComponent();
-            //asdasd
         }
         /*
         private void OpenFileDialogButton_Click(object sender, RoutedEventArgs e)

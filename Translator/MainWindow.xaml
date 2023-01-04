@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         Title="Translator" Height="600" Width="600">
     <Grid>
-        <Views:WithLogView/>
+        <Views:WithLogView Margin="0 30 0 0"/>
+        
     </Grid>
 </Window>
